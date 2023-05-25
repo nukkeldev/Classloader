@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classloader</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1 id="text" class="text">Hopefully the Classloader works!</h1>
+
+    <script type="module">
+        import { Timeline } from "../build/index.js";
+
+        let timeline = new Timeline("text");
+        timeline.addAnimation(
+            {
+                className: "no-more-red",
+                duration: 5,
+                removeOnFinish: false,
+                onStart: () => console.log("no-more-red has been added."),
+                onEnd: () => console.log("no-more-red has now ended :("),
+                atPoint: [
+                    {
+                        time: 1,
+                        callback: () => console.log("1 second in!")
+                    }
+                ]
+            }
+        );
+
+        timeline.addAnimation(
+            {
+                className: "green-perhaps",
+                duration: 5,
+                removeOnFinish: true,
+                onStart: () => console.log("green-perhaps has been added."),
+                onEnd: () => console.log("green-perhaps has now ended :)"),
+            }
+        );
+
+        timeline.execute();
+    </script>
+</body>
+</html>

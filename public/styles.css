@@ -1,0 +1,11 @@
+.text {
+    color: red;
+}
+
+.no-more-red {
+    color: blue;
+}
+
+.green-perhaps {
+    text-shadow: 3px 3px green;
+}
