@@ -119,7 +119,7 @@ let notif = document.getElementById('notification')!;
 let timeline = new Timeline('notification');
 
 timeline.newDelay(1);
-timeline.newAnimation('slideIn', 2, false);
+timeline.newAnimation('slideIn', 2 + 10, true);
 
 notif.addEventListener('click', _ => {
   if (notif.classList.contains('slideIn')) notif.classList.remove('slideIn');
