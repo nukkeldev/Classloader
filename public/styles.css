@@ -1,11 +1,29 @@
-.text {
-    color: red;
+#notification {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    
+    padding: 0.5em 1em;
+
+    border: black 2px solid;
+
+    width: max-content;
+    height: max-content;
+
+    background-color:fuchsia;
+    border-radius: 5px;
+
+    position: absolute;
+    top: 1em;
+    left: -100%;
+
+    transition: left 2s ease-in-out;
 }
 
-.no-more-red {
-    color: blue;
+#notification:hover {
+    box-shadow: 2px 2px 0 black;
+    cursor: pointer;
 }
 
-.green-perhaps {
-    text-shadow: 3px 3px green;
+.slideIn {
+    left: 1em !important;
 }

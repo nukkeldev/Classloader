@@ -8,39 +8,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1 id="text" class="text">Hopefully the Classloader works!</h1>
+    <div id="notification">0 Hot Singles In Your Area.</div>
 
-    <script type="module">
-        import { Timeline } from "../build/index.js";
-
-        let timeline = new Timeline("text");
-        timeline.addAnimation(
-            {
-                className: "no-more-red",
-                duration: 5,
-                removeOnFinish: false,
-                onStart: () => console.log("no-more-red has been added."),
-                onEnd: () => console.log("no-more-red has now ended :("),
-                atPoint: [
-                    {
-                        time: 1,
-                        callback: () => console.log("1 second in!")
-                    }
-                ]
-            }
-        );
-
-        timeline.addAnimation(
-            {
-                className: "green-perhaps",
-                duration: 5,
-                removeOnFinish: true,
-                onStart: () => console.log("green-perhaps has been added."),
-                onEnd: () => console.log("green-perhaps has now ended :)"),
-            }
-        );
-
-        timeline.execute();
-    </script>
+    <script type="module" src="../build/index.js"></script>
 </body>
 </html>

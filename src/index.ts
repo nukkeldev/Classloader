@@ -4,7 +4,13 @@ export type Point = {
   callback: Callback;
 };
 
-export interface Animation {
+export type CallbackCollection = {
+  onStart?: Callback;
+  onEnd?: Callback;
+  atPoint?: Point[];
+};
+
+export class Animation {
   className: string;
   /**
    * Duration in seconds.
@@ -12,9 +18,21 @@ export interface Animation {
   duration: number;
   removeOnFinish: boolean;
 
-  onStart?: Callback;
-  onEnd?: Callback;
-  atPoint?: Point[];
+  callbacks?: CallbackCollection;
+
+  constructor(
+    className: string,
+    duration: number,
+    removeOnFinish: boolean,
+    callbacks?: CallbackCollection
+  ) {
+    this.className = className;
+    this.duration = duration;
+    this.removeOnFinish = removeOnFinish;
+    if (callbacks) {
+      this.callbacks = callbacks;
+    }
+  }
 }
 
 /**
@@ -39,8 +57,23 @@ export class Timeline {
   animations: Animation[] = [];
   totalDuration: number = 0;
 
+  newAnimation(
+    className: string,
+    duration: number,
+    removeOnFinish: boolean,
+    callbacks?: CallbackCollection
+  ) {
+    this.addAnimation(
+      new Animation(className, duration, removeOnFinish, callbacks)
+    );
+  }
+
+  newDelay(seconds: number) {
+    this.newAnimation('', seconds, false);
+  }
+
   addAnimation(animation: Animation) {
-    animation.atPoint?.forEach(({time}) => {
+    animation.callbacks?.atPoint?.forEach(({time}) => {
       if (time >= animation.duration)
         throw new Error(
           'Specific point callbacks must fall within the duration of the animation.'
@@ -52,16 +85,16 @@ export class Timeline {
   }
 
   async execute() {
-    console.log('Executing...');
     for (let n = 0; n < this.animations.length; n++) {
       const animation = this.animations[n];
-      this.element.classList.add(animation.className);
-      if (animation.onStart) animation.onStart();
+      if (animation.className != '')
+        this.element.classList.add(animation.className);
+      if (animation.callbacks?.onStart) animation.callbacks.onStart();
 
       let previousTime = 0;
-      if (animation.atPoint)
-        for (let i = 0; i < animation.atPoint.length; i++) {
-          let {time, callback} = animation.atPoint[i];
+      if (animation.callbacks?.atPoint)
+        for (let i = 0; i < animation.callbacks.atPoint.length; i++) {
+          let {time, callback} = animation.callbacks.atPoint[i];
           await delay(time - previousTime);
           previousTime = time;
           callback();
@@ -69,8 +102,8 @@ export class Timeline {
 
       await delay(animation.duration - previousTime);
 
-      if (animation.onEnd) animation.onEnd();
-      if (animation.removeOnFinish)
+      if (animation.callbacks?.onEnd) animation.callbacks.onEnd();
+      if (animation.removeOnFinish && animation.className != '')
         this.element.classList.remove(animation.className);
     }
   }
@@ -79,3 +112,17 @@ export class Timeline {
 function delay(seconds: number) {
   return new Promise(resolve => setTimeout(resolve, seconds * 1000));
 }
+
+// TEST
+
+let notif = document.getElementById('notification')!;
+let timeline = new Timeline('notification');
+
+timeline.newDelay(1);
+timeline.newAnimation('slideIn', 2, false);
+
+notif.addEventListener('click', _ => {
+  if (notif.classList.contains('slideIn')) notif.classList.remove('slideIn');
+});
+
+timeline.execute();
