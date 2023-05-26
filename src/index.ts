@@ -63,6 +63,7 @@ export class Timeline {
         for (let i = 0; i < animation.atPoint.length; i++) {
           let {time, callback} = animation.atPoint[i];
           await delay(time - previousTime);
+          previousTime = time;
           callback();
         }
 
